@@ -6,10 +6,10 @@ use std::{
 use rand::Rng;
 
 use crate::{
-    balance::add_balance,
+    balance::{add_balance, get_balance, remove_balance},
     commands::sleep,
     enemy::{check_enemy, get_enemyhp, remove_enemyhp},
-    health::{check_hp, get_hp, remove_health},
+    health::{check_hp, get_hp, remove_health, set_gp},
 };
 
 pub fn fightmenu() {
@@ -18,20 +18,27 @@ pub fn fightmenu() {
         check_enemy();
         // Get Health
         let hp = get_hp();
+        let balance = get_balance();
         let enemyhp = get_enemyhp();
+        if enemyhp <= 0 {
+            fs::remove_file(".objects/enemy").unwrap();
+            break;
+        }
+        if hp <= 0 {
+            remove_health(hp);
+            remove_balance(balance);
+            set_gp(0);
+            fs::remove_file(".objects/enemy").unwrap();
+            break;
+        }
         // Clear Console
         print!("\x1B[2J\x1B[1;1H");
         // Menu
-        println!("Fight! \n 1) Punch \n 2) Kick \n 3) kamehameha \n 4) Leave");
+        println!("Fight! \n 1) Punch \n 2) Leave");
         println!("HP: {}", hp);
         println!("EnemyHP: {}", enemyhp);
         print!("Option: ");
         // If Death
-        if enemyhp <= 0 {
-            fs::remove_file("objects/enemy").unwrap();
-            sleep();
-            break;
-        }
         io::stdout().flush().unwrap();
         // let mut option = String::new();
         let mut option = String::new();
@@ -44,14 +51,6 @@ pub fn fightmenu() {
                 sleep();
             }
             "2" => {
-                println!("PATADA");
-                sleep();
-            }
-            "3" => {
-                println!("KAMEEEHAMEEEHAAAAAAA!");
-                sleep();
-            }
-            "4" => {
                 println!("COBARDE");
                 sleep();
                 break;
@@ -77,10 +76,14 @@ pub fn punch() {
         println!("Derrotaste al enemigo y ganaste ${}", amount);
     } else {
         remove_health(hp);
-
-        println!(
-            "Has golpeado al enemigo quitandole {} de salud y el te quitó {} de salud",
-            enemyhp, hp
-        );
+        let myhp = get_hp();
+        if myhp <= 0 {
+            println!("Fuiste derrotado, quedandote sin dinero");
+        } else {
+            println!(
+                "Has golpeado al enemigo quitandole {} de salud y el te quitó {} de salud",
+                enemyhp, hp
+            );
+        }
     }
 }

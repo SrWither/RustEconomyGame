@@ -1,19 +1,10 @@
-pub mod balance;
-pub mod commands;
-pub mod debug;
-pub mod enemy;
-pub mod fight;
-pub mod health;
-pub mod mine;
-
 use std::io::{self, Write};
 
 use crate::balance::{check_balance, get_balance};
 use crate::commands::{fight, gapple, minar, shop, sleep, upgrade, work};
-use crate::debug::debug_main;
 use crate::health::{check_gapple, check_hp, get_gapple, get_hp, set_hp};
 
-fn main() {
+pub fn debug_main() {
     loop {
         // Check balance if not exist
         check_balance();
@@ -36,7 +27,7 @@ fn main() {
         // Clear Console
         print!("\x1B[2J\x1B[1;1H");
         // Menu
-        println!("RustEconomyGame \n 1) Work \n 2) Shop \n 3) Mina \n 4) Upgrade \n 5) Gapple \n 6) Fight \n 7) Exit");
+        println!("DebugEconomyGame \n 1) Work \n 2) Shop \n 3) Mina \n 4) Upgrade \n 5) Gapple \n 6) Fight \n 7) Slots \n 8) Inventory \n 9) Ores \n 10) Exit");
         // Balance
         println!("\nBalance: ${}", bal);
         println!("HP: {}", hp);
@@ -68,11 +59,20 @@ fn main() {
                 fight();
             }
             "7" => {
+                println!("No disponible");
+                sleep();
+            }
+            "8" => {
+                println!("No disponible");
+                sleep();
+            }
+            "9" => {
+                println!("No disponible");
+                sleep();
+            }
+            "10" => {
                 println!("Adios!");
                 break;
-            }
-            "232" => {
-                debug_main();
             }
             _ => {
                 println!("Opción no valida");
